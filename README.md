@@ -1,5 +1,7 @@
 # facet-bgsp
 
+[![DOI](https://zenodo.org/badge/1424882738.svg)](https://doi.org/10.5281/zenodo.23460513)
+
 Reproducibility companion for the paper
 
 > **Corrected Block Sparse Spectral Optimization: Exact Models, Finite
@@ -105,8 +107,11 @@ The paper is not compiled from CI; figures are included from
 If you use this repository or the library it depends on, please cite:
 
 - The paper (see `CITATION.cff`; arXiv identifier added once posted).
-- The library release `facet==0.1.1`.
-- The Zenodo DOI minted from the GitHub release of this repository.
+- The library release `facet-core==0.1.1` on PyPI.
+- The companion repository via its Zenodo DOI
+  [`10.5281/zenodo.23460513`](https://doi.org/10.5281/zenodo.23460513)
+  (concept DOI; resolves to the latest version). For v1.0.0 pinning use
+  [`10.5281/zenodo.23460512`](https://doi.org/10.5281/zenodo.23460512).
 
 ## License
 

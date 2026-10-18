@@ -1,12 +1,20 @@
 cff-version: 1.2.0
 message: >
-  Please cite both the paper and this companion repository (via its
-  Zenodo DOI once minted).
+  Please cite both the paper and this companion repository via its
+  Zenodo concept DOI.
 title: "facet-bgsp: reproducibility companion for Corrected Block Sparse Spectral Optimization"
 version: 1.0.0
 date-released: "2026-10-17"
+doi: 10.5281/zenodo.23460513
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23460513
+    description: Concept DOI (resolves to the latest version).
+  - type: doi
+    value: 10.5281/zenodo.23460512
+    description: Version DOI pinning v1.0.0.
 license: MIT
-repository-code: "https://github.com/omidsolari/facet-bgsp"
+repository-code: "https://github.com/osolari/facet-bgsp"
 authors:
   - family-names: Solari
     given-names: Omid
@@ -30,5 +38,6 @@ preferred-citation:
   url: "https://arxiv.org/abs/XXXX.XXXXX"
   notes: >
     arXiv identifier will be filled in once the paper is posted. The
-    paper corresponds to v1.0.0 of this companion repository and
-    v0.1.1 of the facet library on PyPI.
+    paper corresponds to v1.0.0 of this companion repository
+    (doi:10.5281/zenodo.23460512) and v0.1.1 of the facet-core library
+    on PyPI.
