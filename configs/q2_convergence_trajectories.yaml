@@ -1,0 +1,27 @@
+# Q2, Does the safeguarded solver display finite-length convergence?
+# Generates per-iteration traces (objective, step norm, tangent residual)
+# across seeds. Figure is the empirical face of A6/A7/A8.
+
+name: q2_convergence_trajectories
+seed_base: 2026
+
+problem:
+  p: 10
+  n: 24
+  k: 5
+  singular_values: [5.0]
+  noise_std: 0.0
+
+margin_fraction: 0.5
+initial_angle_rad: 0.6
+replicates: 6
+
+solver:
+  max_iterations: 300
+  tolerance: 1.0e-9
+
+objective: squared
+
+output:
+  csv: q2_trajectories.csv
+  figure: q2_convergence_trajectories.png

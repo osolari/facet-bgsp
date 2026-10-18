@@ -1,0 +1,48 @@
+# M9, single-cell RNA-seq matched-sparsity sweep on PBMC 3k.
+# PCA + k-means on 20 PCs produces 8 cluster labels (named by canonical PBMC
+# marker-gene programs). We then compare three decomposition families at
+# matched (n_cells, n_hvg) = (2700, 2000) and matched m = 8:
+#   - FACET A-SQ swept over gamma
+#   - truncated PCA (dense loadings hard-thresholded per column)
+#   - sklearn SparsePCA swept over alpha
+# Hero: Pareto frontier of (nnz, AMI) + (nnz, silhouette) + top-gene bars at
+# the best-AMI FACET gamma.
+
+name: m9_scrna
+seed: 2044
+
+data:
+  mtx_dir: "papers/a/runs/m9/filtered_gene_bc_matrices/hg19"
+  cache_path: "papers/a/runs/m9/_cache_pbmc3k_preprocessed.npz"
+  n_hvg: 2000
+  n_clusters: 8
+
+decomposition:
+  m: 8
+
+facet:
+  gamma_candidates: [0.03, 0.05, 0.08, 0.12, 0.15, 0.20, 0.30, 0.50, 0.80, 1.20]
+
+truncated_pca:
+  top_k_per_component: [5, 10, 20, 40, 80, 160, 320, 640, 1200, 2000]
+
+sparse_pca:
+  alphas: [0.02, 0.05, 0.1, 0.3, 0.5, 1.0, 2.0, 4.0]
+
+figure:
+  hero_top_k_components: 4
+  hero_top_k_genes: 15
+  interpretability_top_k_genes: 15
+
+interpretability:
+  # Pick the sparsest FACET gamma whose AMI is within ami_tolerance of the
+  # reference method's AMI; that's the configuration that tells the "same
+  # recovery, far fewer genes" story. If no gamma qualifies, fall back to
+  # the max-AMI FACET. reference is 'best_facet' (default) or 'pca'.
+  reference: best_facet
+  ami_tolerance: 0.025
+
+output:
+  csv: m9_scrna.csv
+  figure: m9_scrna.png
+  interpretability_figure: m9_scrna_interpretability_hero.png

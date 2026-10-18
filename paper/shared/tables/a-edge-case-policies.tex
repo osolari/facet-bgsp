@@ -1,0 +1,31 @@
+% §14 required table #3, edge-case policies.
+% Operational conventions the implementation (facet.*) and the proofs
+% both commit to. A theorem is said to apply to the solver only when it
+% is run under the exact policy named in its statement.
+\begin{table}[t]
+\centering
+\caption{Edge-case policies in the FACET reference implementation. These are the \emph{operational} conventions on which every proved theorem is explicitly conditional; running the solver under a different policy voids the theorem's claim.}
+\label{tab:a-edge-case-policies}
+\small
+\begin{tabular}{p{0.26\linewidth}p{0.32\linewidth}p{0.34\linewidth}}
+\toprule
+Edge case & Policy & Pinning test \\
+\midrule
+Threshold tie ($|c_i|=\gamma$) & Treated as inactive ($\Soft_\gamma(c)_i=0$) via the standard $(\cdot)_+$ convention; signed subgradient reused by the solver. & \texttt{tests/test\_paper\_a\_identities.py::test\_a1\_*} \\
+\addlinespace
+Zero soft-threshold vector ($\Soft_\gamma(c)=0$) & Loading set to zero; the loading-ball slack delivers primal value $0$; no renormalization attempted. & \texttt{test\_a1\_sum\_norm\_zero\_support\_returns\_zero} \\
+\addlinespace
+Mask-first refit on a non-empty support & $z = M c / \norm{Mc}_2$; empty support raises \texttt{ZeroDirectionError} rather than returning NaN. & \texttt{tests/test\_paper\_a\_edge\_cases.py::test\_a4\_mask\_then\_normalize\_*} \\
+\addlinespace
+Rank-deficient polar input (Stiefel oracle) & \texttt{canonical} policy completes via SVD; \texttt{raise} policy rejects and surfaces the assumption violation. Both treated as explicit theorem conditioning. & \texttt{test\_a5\_canonical\_policy\_*}, \texttt{test\_a5\_raise\_policy\_*} \\
+\addlinespace
+Zero direction to a linear oracle & Both polar policies raise \texttt{ZeroDirectionError} unconditionally. & \texttt{test\_a5\_zero\_direction\_raises\_regardless\_of\_policy} \\
+\addlinespace
+Top-$k$ tie at the boundary (A-HT) & Lower original index wins; set-valued tie metadata recorded on \texttt{TopKSelection}. & \texttt{test\_topk\_tie\_policy\_prefers\_lower\_index} \\
+\addlinespace
+Armijo backtracking at machine precision & Line search fails loudly (\texttt{RuntimeError}); drivers may catch and drop that seed rather than silently reporting a stationary point. & empirical in \texttt{tests/test\_paper\_a\_solver\_dynamics.py} \\
+\addlinespace
+Component sign at convergence & Component orientation is global-sign ambiguous; projector-level reporting is sign-invariant. & \texttt{test\_a9\_sign\_identification\_matches\_planted\_sign\_pattern} \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,26 @@
+# M7, safe-screening payoff measurement (plan-2026-10-13T1908Z §M7).
+# Replays the safeguarded ascent trajectory on planted spikes with a ground-
+# truth distance to X_star used as the certified radius; applies
+# safe_screen_mask at each iterate and records the fraction of coordinates
+# certified inactive. Reports the achieved screening vs the (n-k)/n ceiling
+# across a sparsity grid.
+
+name: m7_safe_screening
+seed_base: 2031
+replicates: 5
+
+problem:
+  # Scale up from the audit toy (p=12, n=80) so FLOP savings dominate Python
+  # dispatch overhead and wall-clock speedup becomes visible.
+  p: 200
+  n: 2000
+  k_values: [100, 200, 400, 800, 1200, 1600]
+  gamma_margin_fraction: 0.4   # gamma = 0.4 * on_min + 0.6 * off_max
+
+solver:
+  max_iterations: 200
+  tolerance: 1.0e-9
+
+output:
+  csv: m7_safe_screening.csv
+  figure: m7_safe_screening.png

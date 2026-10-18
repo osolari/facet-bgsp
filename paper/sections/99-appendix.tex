@@ -1,0 +1,35 @@
+\section{Additional Derivations and Proof Obligations}
+\label{sec:appendix}
+\subsection{Gradient of the squared-threshold objective}
+For a scalar \(u\), the map \((|u|-\gamma)_+^2\) is continuously differentiable with derivative \(2\operatorname{sign}(u)(|u|-\gamma)_+\). Therefore
+\[
+\nabla_{x_j}F_{\mathrm{sq}}(X)=2\mu_jA\Soft_{\gamma_j}(\mu_jA^\top x_j).
+\]
+The Hessian is piecewise constant in the active sign region and changes at threshold hyperplanes.
+
+\subsection{Riemannian gradient and tangent projection}
+For the canonical embedded metric on \(\St(p,m)\),
+\[
+\operatorname{grad}F(X)=\nabla F(X)-X\operatorname{sym}(X^\top\nabla F(X)).
+\]
+Any proof for Algorithm~\ref{alg:safeguarded} must use the metric and retraction actually implemented. If a different metric or polar retraction is used, the constants and relative-error lemma must be recomputed.
+
+\subsection{Polar derivative obligation}
+At a full-column-rank matrix \(G=UP\), the differential of the polar factor may be written through a Sylvester equation for the skew component. For heterogeneous active supports, the local map combines the differentials of \(C_{S_j}x_j\) with this polar derivative. The target local theorem must explicitly restrict this derivative to \(T_X\St(p,m)\) and verify that the selected polar branch is locally smooth.
+
+\subsection{Counterexample suite}
+The reference implementation includes pinned tests for: sum-versus-square disagreement (Proposition~\ref{prop:counterexample}); zero-response components; normalize-then-mask norm violation (A4); threshold cycling; repeated active eigenvalues; rank-deficient gradient matrices (A5); and component-specific supports for which a pooled covariance predicts the wrong local rate.
+
+\subsection{Proof checklist}
+\begin{enumerate}[leftmargin=*]
+\item Verify dimensions, tie conventions, compactness, and inactive-component semantics.
+\item Prove exact elimination before convergence.
+\item Distinguish the full-polar and safeguarded algorithms theorem-by-theorem.
+\item Establish sufficient ascent and relative error for the implemented retraction.
+\item Prove identification only after convergence or jointly with it.
+\item Derive the actual fixed-support map before asserting a spectral rate.
+\item Preserve counterexamples at every assumption boundary.
+\end{enumerate}
+
+\subsection{Reproducibility checklist}
+The reference implementation logs objective, linear-oracle residual, Riemannian-gradient norm, support, signs, rank, and polar tie policy in the solver trace. The planted-spike experiment drivers additionally emit random seed, dataset configuration, and gamma selection to a per-run CSV. Every figure and table in this paper is regenerated from the deterministic configuration files under \texttt{configs/} by the drivers under \texttt{experiments/}; the pinned smoke tests under \texttt{tests/} verify both the schema and the headline numerical claim of each figure on a reduced fixture.

@@ -1,0 +1,30 @@
+% =============================================================================
+% math.tex - shared project notation
+% =============================================================================
+% Do not load packages here. The document entrypoints load amsmath, amssymb,
+% amsfonts, amsthm, mathtools, and any project-specific dependencies.
+
+% Number sets and expectations
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\E}{\mathbb{E}}
+
+% Common operators
+\providecommand{\KL}{\operatorname{KL}}
+\providecommand{\DKL}{D_{\mathrm{KL}}}
+\providecommand{\Var}{\operatorname{Var}}
+\providecommand{\Cov}{\operatorname{Cov}}
+\providecommand{\argmax}{\operatorname*{arg\,max}}
+\providecommand{\argmin}{\operatorname*{arg\,min}}
+
+% Delimiters
+\providecommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\providecommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\providecommand{\set}[1]{\left\{ #1 \right\}}
+\providecommand{\paren}[1]{\left( #1 \right)}
+\providecommand{\bracket}[1]{\left[ #1 \right]}
+\providecommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
+
+% Example policy notation. Delete or extend for a different project.
+\providecommand{\pitheta}{\pi_{\theta}}
+\providecommand{\piref}{\pi_{\mathrm{ref}}}
+\providecommand{\pistar}{\pi^{*}}

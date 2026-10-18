@@ -1,0 +1,26 @@
+# M6, classical sparse-PCA benchmark on Jeffers (1967) Pitprops.
+# See plan-2026-10-13T1908Z §M6.
+# FACET A-SQ / A-SUM / sklearn SparsePCA (as a Zou-sPCA analogue) swept over
+# their sparsity hyperparameters, plus dense PCA as a reference. The figure
+# traces the (total nonzeros, total explained variance) Pareto frontier for
+# the top-m loadings.
+
+name: m6_pitprops
+seed: 2029
+
+data:
+  n_samples: 180   # Jeffers (1967) original sample size
+
+decomposition:
+  m: 6
+
+facet:
+  gammas_sq:  [0.02, 0.05, 0.10, 0.20, 0.35, 0.50, 0.80, 1.20, 2.00]
+  gammas_sum: [0.02, 0.05, 0.10, 0.20, 0.35, 0.50, 0.80, 1.20, 2.00]
+
+sparse_pca:
+  alphas: [0.01, 0.05, 0.1, 0.3, 0.5, 1.0, 2.0, 4.0, 8.0]
+
+output:
+  csv: m6_pitprops.csv
+  figure: m6_pitprops.png

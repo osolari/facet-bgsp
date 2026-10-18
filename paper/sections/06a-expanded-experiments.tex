@@ -1,0 +1,17 @@
+\section{Expanded Experimental Protocol and Expected Regimes}
+\label{sec:expanded-experiments}
+
+\subsection{Research questions}
+The experiments are organized around five questions: (i) do the two corrected objectives behave differently; (ii) does the safeguarded method display finite-length and last-iterate behavior; (iii) do strict margins predict finite identification; (iv) do active eigengaps or the polar Jacobian predict local rates; and (v) does screening reduce data access without changing the selected support?
+
+\subsection{Controlled matrix families}
+The synthetic generator varies sample dimension $p$, variable dimension $n$, number of components $m$, support overlap, active eigengaps, threshold margins, and noise. Four adversarial families are mandatory: aggregation-disagreement instances, threshold-tie instances, rank-deficient-gradient instances, and heterogeneous-support instances for which a pooled covariance gives an incorrect local-rate prediction. Each configuration uses independent seeds and reports distributions rather than only means.
+
+\subsection{Neural bridge and LLM activation study}
+The neural bridge uses a small model with planted sparse latent concepts so that support recovery and causal intervention are measurable. The foundation-model study samples statistically meaningful units at the document or conversation level, stores layer activations, and evaluates native-channel sparse components. Selection, restricted refitting, and any downstream calibration are reported separately. Causal evidence includes ablation, patching, and targeted steering; reconstruction is treated as a descriptive metric only.
+
+\subsection{Metrics and diagnostic plots}
+The core traces are objective, affine-oracle residual, Riemannian-gradient norm, support and sign changes, threshold margin, active eigengap, smallest singular value of the polar input, and number of screened correlations. Required plots include observed versus predicted contraction, identification time versus inverse margin, support stability across data splits, and raw versus refitted objective.
+
+\subsection{Expected qualitative outcomes}
+The theory predicts earlier identification under larger margins, faster local convergence under larger active spectral gaps, and late-stage computational savings when inactive correlations are well separated. The empirical panels in \Cref{sec:results} report these hypotheses as observed: identification under margin $\times$ noise shows a visible phase transition (Figure~\ref{fig:q3-margin}), the local-rate prediction matches observation to within $5\%$ for the pure power-iteration branch and $1\%$ for the shifted (A-SQ) branch (Figure~\ref{fig:q4-local-rate}), and certified screening attains the full $(n-k)/n$ oracle-work ceiling with machine-precision objective agreement (Figure~\ref{fig:m7-safe-screening}). The strongest remaining falsifiers would be persistent support cycling despite strict measured margins, lack of any local-rate relation to the derived Jacobian in the heterogeneous-support regime, or no computational benefit from certified screening at problem sizes where FLOP cost dominates Python dispatch overhead.

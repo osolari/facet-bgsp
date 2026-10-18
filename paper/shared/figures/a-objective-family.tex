@@ -1,0 +1,14 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=10mm and 12mm]
+\node[primarybox,text width=3.6cm] (primal) {Normalized loading-ball primal\\$\max_{\|z_j\|\le1} c_j^\top z_j-\gamma_j\|z_j\|_1$};
+\node[secondarybox,text width=3.5cm,right=of primal] (sum) {A-SUM\\$\sum_j\|\Soft_{\gamma_j}(c_j)\|_2$};
+\node[primarybox,text width=3.6cm,below=of primal] (qlift) {Quadratic-lift primal\\$\max_z 2c_j^\top z-\|z\|^2-2\gamma_j\|z\|_1$};
+\node[secondarybox,text width=3.5cm,right=of qlift] (sq) {A-SQ\\$\sum_j\|\Soft_{\gamma_j}(c_j)\|_2^2$};
+\draw[arrPrimary] (primal)--node[above,font=\scriptsize]{exact elimination}(sum);
+\draw[arrPrimary] (qlift)--node[above,font=\scriptsize]{exact elimination}(sq);
+\draw[dashed,thick,draw=Warning] (sum)--node[right,font=\scriptsize,align=center]{not equivalent\\for $m>1$}(sq);
+\end{tikzpicture}
+\caption{The corrected model family. A-SUM and A-SQ have different exact primal interpretations and are not silently identified.}
+\label{fig:a-objectives}
+\end{figure}

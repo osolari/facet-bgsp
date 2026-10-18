@@ -1,0 +1,8 @@
+% Shared table vocabulary. Load array and tabularx first.
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\SAIMTableHead}[1]{{\rmfamily\bfseries\color{Ink}#1}}
+\newcommand{\SAIMBest}[1]{{\bfseries\color{Positive}#1}}
+\newcommand{\SAIMMutedCell}[1]{{\color{Muted}#1}}

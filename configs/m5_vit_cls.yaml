@@ -1,0 +1,25 @@
+# M5, ViT CLS token decomposition (plan-2026-10-13T1908Z §M5).
+# Synthetic 10-class image set (solid colors, stripes, gradients, disks,
+# frames) rendered deterministically from per-class templates with pixel
+# jitter. ViT-base-patch16-224 extracts CLS tokens from the final block;
+# FACET A-SQ and PCA fit m=10 components and are scored by cluster purity
+# against the known class labels (AMI + silhouette).
+
+name: m5_vit_cls
+seed: 2033
+
+model:
+  name: google/vit-base-patch16-224
+
+data:
+  per_class: 20     # 10 classes * 20 images = 200 ViT inferences
+
+decomposition:
+  m: 10              # match the planted class count
+
+facet:
+  gamma_candidates: [0.2, 0.5, 1.0, 2.0, 4.0, 0.1, 0.05]
+
+output:
+  csv: m5_vit_cls.csv
+  figure: m5_vit_cls.png

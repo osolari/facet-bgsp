@@ -1,0 +1,28 @@
+# Q1, Do A-SUM and A-SQ actually differ under multi-component aggregations?
+#
+# Reads the deterministic counterexample from test_paper_a_identities (a
+# 2-row x 7-column A, m=2 orthonormal frames parameterized by rotation
+# angle). Sweeps the rotation grid and evaluates F_sum(X(theta)) and
+# F_sq(X(theta)) to show the ordering reversal that the A3 proposition
+# claims. The counterexample fixture is embedded verbatim here so the
+# experiment is self-contained and reproducible without pulling test code.
+
+name: q1_sum_vs_sq
+
+# Canonical A3 counterexample (fixed, deterministic, DO NOT edit; it is the
+# instance for which test_a3_sum_vs_squared_aggregation_rank_two_candidates_differently
+# asserts the ordering reversal.)
+instance:
+  A:
+    - [1.42993853, -0.15647532, -0.67375915, -0.6390601, -0.06136133, -0.39278492, 2.28990995]
+    - [-0.71818115, 0.03260774,  0.0280499,  0.02827212, 0.05534586, -0.48156286, -0.5834075]
+  gammas: [0.6845716431159987, 0.5315438759871329]
+
+sweep:
+  angle_min_rad: 0.0
+  angle_max_rad: 3.141592653589793   # pi
+  angle_samples: 361                   # 0.5-degree resolution
+
+output:
+  csv: q1_results.csv
+  figure: q1_sum_vs_sq.png

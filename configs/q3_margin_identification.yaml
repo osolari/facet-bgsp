@@ -1,0 +1,38 @@
+# Q3, Does a strict threshold margin predict finite support/sign identification?
+#
+# A clean rank-1 instance is identically identifiable at every margin fraction,
+# so the clean sweep is uninformative (every cell = 100%, 0 iters). The
+# scientifically honest Q3 adds a noise axis so the identification phase
+# transition becomes visible: at low margin fraction + high noise, the gamma
+# cutoff falls below the perturbed off-support correlations and the solver
+# selects spurious coordinates. See
+# .claude/skills/facet-paper-a/plan-2026-10-13T1908Z_...md §Q3.
+
+name: q3_margin_identification
+seed_base: 2026
+
+problem:
+  p: 10
+  n: 25
+  k: 5
+  singular_values: [5.0]
+
+grid:
+  # noise_std sweep is the Q3 fix: without it the figure is degenerate.
+  # For sigma=5 and k=5 the on-support correlation on_min ~ 1.0, so recovery
+  # breaks around noise_std ~ 0.2 (max |spurious correlation| ~ sigma * sqrt(2 log(n-k))).
+  noise_std: [0.0, 0.05, 0.10, 0.15, 0.20, 0.30]
+  margin_fraction: [0.05, 0.2, 0.4, 0.6, 0.8, 0.95]
+  initial_angle_rad: [0.1, 0.3, 0.6]
+  replicates: 5
+
+solver:
+  name: safeguarded
+  max_iterations: 400
+  tolerance: 1.0e-8
+
+objective: squared  # A-SQ; A-SUM is a monotone transform at m=1
+
+output:
+  csv: q3_results.csv
+  figure: q3_margin_identification.png

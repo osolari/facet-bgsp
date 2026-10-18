@@ -1,0 +1,72 @@
+\section{Theory}
+\label{sec:theory}
+\input{../shared/figures/a-proof-dependency.tex}
+\input{../shared/tables/a-theorem-program.tex}
+
+\subsection{Monotonicity of the full-polar step}
+\begin{proposition}[Affine-minorant ascent]
+\label{prop:fullpolar-monotone}
+Let \(F\) be differentiable and convex on an open set containing \(\St(p,m)\). If
+\[
+X^+\in\arg\max_{Y\in\St(p,m)}\ip{\nabla F(X)}{Y},
+\]
+then \(F(X^+)\ge F(X)\). More precisely,
+\[
+F(X^+)-F(X)\ge \Delta_F(X):=
+\max_{Y\in\St(p,m)}\ip{\nabla F(X)}{Y-X}\ge0.
+\]
+\end{proposition}
+\begin{proof}
+Convexity gives \(F(X^+)\ge F(X)+\ip{\nabla F(X)}{X^+-X}\). Because \(X\) is feasible and \(X^+\) maximizes the linear form, the inner product equals \(\Delta_F(X)\ge0\).
+\end{proof}
+The proposition proves ascent and summability of the nonnegative residual along any bounded objective sequence, but it does not prove convergence of the iterates or local maximality.
+
+\subsection{Whole-sequence convergence of the safeguarded method}
+The last-iterate theorem for Algorithm~\ref{alg:safeguarded} is Theorem~\ref{thm:a-whole-sequence} of Section~\ref{sec:extended-theory}; its three ingredients, sufficient ascent (Lemma~\ref{lem:a-sufficient-ascent}), relative error (Lemma~\ref{lem:a-relative-error}), and semi-algebraic definability of $-F+\iota_{\St}$, are proved there. The semi-algebraic argument requires no assumption beyond the implemented soft-threshold formula and the algebraic Stiefel constraint; it does not depend on the strong-convexity hypotheses of the recent unit-step analysis of \citet{aktas2025strongly}, which is cited for comparison rather than as a substitute. The rank-deficient polar branch is handled by the deterministic SVD completion of Section~\ref{sec:setup}; on the compact iterate set it preserves the Lemma~\ref{lem:a-sufficient-ascent}--\ref{lem:a-relative-error} constants.
+
+\subsection{Finite active-set identification}
+\begin{theorem}[Conditional support and sign identification]
+\label{thm:identification}
+Assume \(X_k\to X_\star\). Suppose there exists \(\delta>0\) such that for every component and coordinate,
+\[
+\bigl||\mu_j a_i^\top x_{j\star}|-\gamma_j\bigr|\ge\delta,
+\]
+and every active correlation is separated from zero by \(\delta\). Then there exists \(K<\infty\) such that the support and active signs induced by \(X_k\) equal those of \(X_\star\) for all \(k\ge K\).
+\end{theorem}
+\begin{proof}
+There are finitely many correlations and each is continuous in \(X\). Convergence implies uniform convergence of all correlations to their limiting values. Choose \(K\) so that every correlation changes by less than \(\delta/2\) after iteration \(K\). No threshold inequality or active sign can then change.
+\end{proof}
+At zero margin the conclusion can fail: a convergent sequence may approach a threshold boundary while alternating between its two sides.
+
+\subsection{Post-identification dynamics}
+\begin{proposition}[Rank-one hard-threshold rate]
+\label{prop:rankone-rate}
+After a hard-threshold support \(S\) is fixed, the rank-one update is power iteration on \(C_S=A_SA_S^\top\). If \(\lambda_1(C_S)>\lambda_2(C_S)\) and the iterate has nonzero projection on the leading eigenvector, then
+\[
+\tan\angle(x_{k+1},u_1)
+\le \frac{\lambda_2(C_S)}{\lambda_1(C_S)}
+\tan\angle(x_k,u_1).
+\]
+\end{proposition}
+\begin{proof}
+Expand \(x_k\) in the orthonormal eigenbasis of \(C_S\). Multiplication scales the leading coefficient by \(\lambda_1\) and every orthogonal coefficient by at most \(\lambda_2\); normalization cancels a common factor.
+\end{proof}
+
+For common block support, the analogous result is orthogonal iteration and depends on the gap \(\lambda_m-\lambda_{m+1}\). With component-specific supports, define \(\Phi(X)=\operatorname{Polar}([C_{S_1}x_1,\ldots,C_{S_m}x_m])\). A correct local theorem must differentiate \(\Phi\) on the Stiefel tangent space and require \(\rho(D\Phi(X_\star)|_{T_{X_\star}\St})<1\). This condition is a target result, not replaced by a single eigengap when the active operators differ.
+
+\subsection{Locally safe screening}
+\begin{proposition}[Radius-based safe screening]
+\label{prop:safe-screen}
+Suppose \(\norm{x_{j\star}-x_{jk}}_2\le r_{jk}\). If
+\[
+|\mu_j a_i^\top x_{jk}|+\mu_j\norm{a_i}_2 r_{jk}<\gamma_j,
+\]
+then coordinate \((i,j)\) is inactive at \(X_\star\).
+\end{proposition}
+\begin{proof}
+Cauchy--Schwarz gives \(|\mu_j a_i^\top x_{j\star}|\le |\mu_j a_i^\top x_{jk}|+\mu_j\norm{a_i}_2r_{jk}\). The strict upper bound lies below threshold.
+\end{proof}
+The rule is safe only when \(r_{jk}\) is itself certified. Empirical step sizes or unverified contraction estimates produce heuristic screening and are labeled accordingly.
+
+\subsection{Second-order scope}
+On a fixed rank-one hard support, the objective is a Rayleigh quotient: nonleading simple eigenvectors are saddles or local minima according to the tangent Hessian. For heterogeneous block supports and nonsmooth threshold boundaries, a generic strict-saddle theorem is not claimed. Any Newton acceleration must be compared with contemporary sparse-Stiefel identification and second-order methods and must state clean-intersection and second-order sufficient conditions explicitly.

@@ -1,0 +1,69 @@
+\section{Algorithms and Refitting}
+\label{sec:method}
+\input{../shared/figures/a-active-set-phases.tex}
+\input{../shared/figures/a-safeguarded-flow.tex}
+
+\subsection{Historical full-polar iteration}
+For A-SQ the ambient gradient columns are
+\[
+g_j(X)=2\mu_j A\Soft_{\gamma_j}(\mu_jA^\top x_j).
+\]
+Writing \(G(X)=[g_1(X),\ldots,g_m(X)]\), the historical step chooses
+\[
+X_{k+1}\in\arg\max_{Y\in\St(p,m)}\ip{G(X_k)}{Y}=\Polar(G(X_k)).
+\]
+When \(G\) is rank deficient, the polar maximizer is set-valued; the implementation uses a deterministic SVD completion and records the rank event.
+
+\begin{algorithm}[t]
+\caption{Historical full-polar A-SQ iteration}
+\label{alg:full-polar}
+\begin{algorithmic}[1]
+\Require Data operator \(A\), thresholds \(\gamma_j\), weights \(\mu_j\), initial \(X_0\in\St(p,m)\)
+\For{\(k=0,1,\ldots\)}
+  \State \(C_k\gets A^\top X_k\Diag(\mu_1,\ldots,\mu_m)\)
+  \State \(Z_k\gets \Soft_{\gamma}(C_k)\) columnwise
+  \State \(G_k\gets 2A Z_k\Diag(\mu_1,\ldots,\mu_m)\)
+  \State \(X_{k+1}\gets\operatorname{DeterministicPolar}(G_k)\)
+  \State log objective, linear-oracle residual, support, signs, and rank
+  \If{the stationarity and support criteria hold} \State \textbf{break} \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{FACET safeguarded iteration}
+Whole-sequence analysis is attached to a different algorithm. At \(X_k\), compute the Riemannian gradient \(\operatorname{grad}F(X_k)\), form a tangent ascent direction \(\eta_k\), and retract \(R_{X_k}(t\eta_k)\). A backtracking line search selects the largest \(t\) satisfying
+\[
+F(R_{X_k}(t\eta_k))\ge F(X_k)+\sigma t\norm{\eta_k}_F^2.
+\]
+If the candidate fails because of numerical rank or an undefined active response, the method uses a regularized polar/retraction fallback and records the event. The stopping rule combines a Riemannian-gradient norm, a linear-oracle residual, and support stability; objective change alone is insufficient.
+
+\begin{algorithm}[t]
+\caption{Safeguarded active-set spectral ascent}
+\label{alg:safeguarded}
+\begin{algorithmic}[1]
+\Require \(X_0\in\St(p,m)\), Armijo constants \(\sigma\in(0,1)\), \(\beta\in(0,1)\), regularization \(\varepsilon\ge0\)
+\For{\(k=0,1,\ldots\)}
+  \State compute \(F(X_k)\), active pattern, and \(\operatorname{grad}F(X_k)\)
+  \State choose tangent ascent direction \(\eta_k\) satisfying a gradient-related condition
+  \State \(t\gets1\)
+  \While{Armijo ascent fails for \(R_{X_k}(t\eta_k)\)} \State \(t\gets\beta t\) \EndWhile
+  \State \(X_{k+1}\gets R_{X_k}(t\eta_k)\)
+  \State update certified support margins and optional local screening set
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Support-conditioned refitting}
+For one selected support \(S\), the exact refit is the leading singular-vector pair of \(A_S\). For component-specific block supports \(S_j\), define masks \(M_j\) and solve
+\[
+\max_{X^\top X=I,\ \norm{z_j}_2=1,\ \supp(z_j)\subseteq S_j}
+\sum_{j=1}^m \mu_j x_j^\top A z_j.
+\]
+Conditional on \(X\), the exact loading update is
+\[
+z_j\leftarrow\frac{M_jA^\top x_j}{\norm{M_jA^\top x_j}_2},
+\]
+when nonzero. Conditional on \(Z\), the exact score update is \(X\leftarrow\Polar(AZ\Diag(\mu))\). Each block update weakly increases the refit objective, so alternating exact updates are monotone; convergence is to a block-stationary point, not necessarily the global refit.
+
+\subsection{Complexity}
+Without screening, correlation and reconstruction products cost \(O(npm)\) for dense \(A\); the polar factor costs \(O(pm^2+m^3)\). After permanent screening to \(s\) active or near-active coordinates, the dominant products cost \(O(spm)\). Refitting cost depends on support structure and is reported separately from selector cost.

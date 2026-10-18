@@ -1,0 +1,36 @@
+# Q4, local-rate prediction versus observation (§14 required figure #6).
+# Hand-constructed rank-2 operator with KNOWN top-two restricted eigenvalues
+# (lambda_1, lambda_2). Two branches:
+#   (a) Pure power iteration (gamma = 0, hard-support): predicted rate =
+#       lambda_2 / lambda_1 exactly (classical sphere power iteration).
+#   (b) A-SQ with the standard shrinkage gamma: predicted rate =
+#       lambda_2 / (lambda_1 - gamma * sigma_1 * sqrt(k)), reflecting the
+#       affine shift gamma * A_S * sign(c) introduced by soft-thresholding
+#       on the identified support.
+# Both predictions are plotted as reference lines next to the observed
+# geometric rate of sin(angle_t) decay.
+
+name: q4_local_rate
+seed_base: 42
+
+problem:
+  p: 12
+  k: 5
+  lam1: 4.0
+  # lam2 is swept across the grid below; the shifted-prediction rate stays
+  # below 1 only for lam2 < lam1 - gamma*sigma_1*sqrt(k), which for the
+  # default (lam1=4, k=5, gamma = 0.5*on_min) is ~2.0.
+grid:
+  lam2: [0.2, 0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 1.9]
+  replicates: 3
+  # Start farther from x_star so the decaying prefix has enough points to
+  # fit a stable geometric slope before reaching the numerical floor.
+  initial_angle_rad: 1.0
+
+solver:
+  max_iterations: 600
+  tolerance: 1.0e-12
+
+output:
+  csv: q4_rates.csv
+  figure: q4_local_rate.png

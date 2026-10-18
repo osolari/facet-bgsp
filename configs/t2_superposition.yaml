@@ -1,0 +1,41 @@
+# Tier-2, superposition toy with a sparsity sweep (see
+# .claude/skills/facet-paper-a/plan-2026-10-13T1908Z_...md §T2).
+#
+# n=12 planted features in d=6 hidden dims. We sweep three sparsity regimes:
+#   - trivial    (~1 feature active per sample)  → antipodal collapse → 6 unique
+#   - genuine    (~3 features active per sample) → forced non-orthogonal → ~12 unique
+#   - dense      (~7 features active per sample) → recovery breaks (negative control)
+#
+# Reports Hungarian-matched |cos| so one component is not reused across multiple
+# planted features. Also reports the count of UNIQUE planted directions after
+# collapsing antipodal pairs so the reader can judge whether "n>d recovery" is
+# cosmetic (unique < n) or real (unique ≈ n).
+
+name: t2_superposition
+seed_base: 1001
+replicates: 3
+
+model:
+  n: 12
+  d: 6
+  importance_decay: 0.95
+
+sparsity_regimes:
+  # Elhage's toy collapses to 6 antipodal pairs for sparsity ≲ 0.3 (so there are
+  # really only d=6 unique directions, and "n>d recovery" is cosmetic). Only at
+  # high density is the model forced into a genuine n>d arrangement.
+  - {label: "very sparse (~1/n)",    sparsity: 0.08}  # ~1 active per sample
+  - {label: "moderate (~4/n)",       sparsity: 0.33}  # ~4 active per sample
+  - {label: "dense (~8/n)",          sparsity: 0.67}  # ~8 active per sample
+
+training:
+  batch_size: 1024
+  steps: 2500
+  lr: 0.01
+
+facet:
+  gamma_candidates: [0.15, 0.20, 0.25, 0.12, 0.10, 0.30, 0.40]
+
+output:
+  csv: t2_superposition.csv
+  figure: t2_superposition.png

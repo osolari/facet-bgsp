@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: >
+  Please cite both the paper and this companion repository (via its
+  Zenodo DOI once minted).
+title: "facet-bgsp: reproducibility companion for Corrected Block Sparse Spectral Optimization"
+version: 1.0.0
+date-released: "2026-10-17"
+license: MIT
+repository-code: "https://github.com/omidsolari/facet-bgsp"
+authors:
+  - family-names: Solari
+    given-names: Omid
+    email: solari@berkeley.edu
+keywords:
+  - sparse PCA
+  - block generalized power method
+  - Stiefel manifold
+  - Kurdyka-Lojasiewicz convergence
+  - safe screening
+  - interpretability
+  - sparse autoencoder
+  - single-cell RNA-seq
+preferred-citation:
+  type: article
+  title: "Corrected Block Sparse Spectral Optimization: Exact Models, Finite Identification, and Local Dynamics"
+  authors:
+    - family-names: Solari
+      given-names: Omid
+  year: 2026
+  url: "https://arxiv.org/abs/XXXX.XXXXX"
+  notes: >
+    arXiv identifier will be filled in once the paper is posted. The
+    paper corresponds to v1.0.0 of this companion repository and
+    v0.1.1 of the facet library on PyPI.

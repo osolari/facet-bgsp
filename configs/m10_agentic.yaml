@@ -1,0 +1,24 @@
+# M10, agentic AI: multi-turn tool-use activation decomposition.
+# 7 hand-written conversations alternate through greeting / planning /
+# tool_call / tool_response / reasoning / answer / summary phases. GPT-2
+# small (124M) extracts residual-stream activations per token at the
+# chosen block; FACET A-SQ and PCA fit at m=16 components. Hero: component
+# x phase heatmap, standardised per component.
+
+name: m10_agentic
+seed: 2043
+
+model:
+  name: gpt2
+  layer: 6
+  site: resid_post
+
+decomposition:
+  m: 16
+
+facet:
+  gamma_candidates: [0.15, 0.25, 0.4, 0.6, 1.0, 2.0, 0.08]
+
+output:
+  csv: m10_agentic.csv
+  figure: m10_agentic.png

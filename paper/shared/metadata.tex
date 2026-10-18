@@ -1,0 +1,231 @@
+% Project-wide metadata - edit once, reuse across all outputs.
+%
+% AUTHOR, AFFILIATION, AND EMAIL REGISTRY
+% --------------------------------------
+% Edit people only in shared/people.tex:
+%   \Affiliation{key}{Institution name}
+%   \Author{Name}{email}{affiliation-key-list}
+%   \CorrespondingAuthor{Name}{email}  % optional override
+%
+% The author line carries that author's email and one or more affiliation keys.
+% Multiple authors can reuse the same affiliation key. Do not edit author,
+% affiliation, or email lists in paper/, slides/, book/, or gallery/.
+
+% ---------------------------------------------------------------------------
+% Document identity.
+% ---------------------------------------------------------------------------
+\newcommand{\ProjectTitle}{Corrected Block Sparse Spectral Optimization: Exact Models, Finite Identification, and Local Dynamics}
+\newcommand{\ProjectShortTitle}{Corrected Block Sparse Optimization}
+\newcommand{\ProjectSubtitle}{A theory-first reconstruction of block threshold-and-polar methods}
+\newcommand{\ProjectTagline}{Correct the estimator first; then analyze the active-set dynamics.}
+\newcommand{\ProjectDate}{October 2026}
+\newcommand{\ProjectVersion}{v0.5}
+\newcommand{\ProjectKeywords}{FACET, sparse PCA, Stiefel manifold, support identification, KŁ convergence, local spectral dynamics}
+
+% ---------------------------------------------------------------------------
+% Registry implementation. Do not edit this section during normal use.
+% ---------------------------------------------------------------------------
+\makeatletter
+\newcounter{AuthorCounter}
+\newcounter{AffiliationCounter}
+
+\newcommand{\ProjectMetaSep}{\enspace\textbullet\enspace}
+\newcommand{\ProjectWhiteMetaSep}{\enspace\textbullet\enspace}
+\newcommand{\AuthorEntry}[2]{#1\textsuperscript{#2}}
+\newcommand{\AffiliationEntry}[2]{\textsuperscript{#1}#2}
+
+\newcommand{\AuthorListTypeset}{}
+\newcommand{\AuthorListPlain}{}
+\newcommand{\AuthorListPDF}{}
+\newcommand{\AuthorListBib}{}
+\newcommand{\AffiliationListTypeset}{}
+\newcommand{\AffiliationListPlain}{}
+\newcommand{\AffiliationListPDF}{}
+\newcommand{\EmailListTypeset}{}
+\newcommand{\EmailListPlain}{}
+\newcommand{\EmailListPDF}{}
+\newcommand{\AuthorEmailListTypeset}{}
+\newcommand{\AuthorEmailListPlain}{}
+\newcommand{\AuthorEmailListPDF}{}
+\newcommand{\LeadAuthor}{}
+\newcommand{\LeadAuthorEmail}{}
+\newcommand{\CorrespondingAuthorName}{}
+\newcommand{\CorrespondenceEmail}{}
+
+\newcommand{\ResetPeople}{%
+  \setcounter{AuthorCounter}{0}%
+  \setcounter{AffiliationCounter}{0}%
+  \gdef\AuthorListTypeset{}%
+  \gdef\AuthorListPlain{}%
+  \gdef\AuthorListPDF{}%
+  \gdef\AuthorListBib{}%
+  \gdef\AffiliationListTypeset{}%
+  \gdef\AffiliationListPlain{}%
+  \gdef\AffiliationListPDF{}%
+  \gdef\EmailListTypeset{}%
+  \gdef\EmailListPlain{}%
+  \gdef\EmailListPDF{}%
+  \gdef\AuthorEmailListTypeset{}%
+  \gdef\AuthorEmailListPlain{}%
+  \gdef\AuthorEmailListPDF{}%
+  \gdef\LeadAuthor{}%
+  \gdef\LeadAuthorEmail{}%
+  \gdef\CorrespondingAuthorName{}%
+  \gdef\CorrespondenceEmail{}%
+}
+
+% Declare one unique affiliation. The first argument is the key used by authors.
+% Example: \Affiliation{saim}{sAIm Labs}
+\newcommand{\Affiliation}[2]{%
+  \stepcounter{AffiliationCounter}%
+  \expandafter\xdef\csname AffiliationMark@#1\endcsname{\arabic{AffiliationCounter}}%
+  \expandafter\gdef\csname AffiliationText@#1\endcsname{#2}%
+  \ifnum\value{AffiliationCounter}>1\relax
+    \g@addto@macro\AffiliationListTypeset{\ProjectMetaSep}%
+    \g@addto@macro\AffiliationListPlain{\ProjectMetaSep}%
+    \g@addto@macro\AffiliationListPDF{; }%
+  \fi
+  \g@addto@macro\AffiliationListTypeset{\AffiliationEntry{\csname AffiliationMark@#1\endcsname}{#2}}%
+  \g@addto@macro\AffiliationListPlain{#2}%
+  \g@addto@macro\AffiliationListPDF{\csname AffiliationMark@#1\endcsname: #2}%
+}
+
+\ExplSyntaxOn
+\cs_new_protected:Npn \saim_unknown_affiliation:n #1
+  {
+    \PackageError{saim-metadata}{Unknown affiliation key `#1'}
+      {Declare it first with \string\Affiliation{#1}{Institution name}.}
+  }
+\cs_new:Npn \saim_affiliation_mark:n #1
+  {
+    \cs_if_exist_use:cF { AffiliationMark@\tl_trim_spaces:n {#1} }
+      { \saim_unknown_affiliation:n {#1} }
+  }
+\int_new:N \l_saim_affiliation_mark_index_int
+\cs_new:Npn \saim_affiliation_marks:n #1
+  {
+    \int_zero:N \l_saim_affiliation_mark_index_int
+    \clist_map_inline:nn {#1}
+      {
+        \int_incr:N \l_saim_affiliation_mark_index_int
+        \int_compare:nNnT {\l_saim_affiliation_mark_index_int} > {1} {,}%
+        \saim_affiliation_mark:n {##1}
+      }
+  }
+\NewDocumentCommand{\AffiliationMarks}{m}{\saim_affiliation_marks:n {#1}}
+\ExplSyntaxOff
+
+% Declare one author. The third argument is a comma-separated list of affiliation keys.
+% Example: \Author{Ada Lovelace}{ada@example.com}{saim,exampleu}
+\newcommand{\Author}[3]{%
+  \stepcounter{AuthorCounter}%
+  \ifnum\value{AuthorCounter}=1\relax
+    \gdef\LeadAuthor{#1}%
+    \gdef\LeadAuthorEmail{#2}%
+    \gdef\CorrespondingAuthorName{#1}%
+    \gdef\CorrespondenceEmail{#2}%
+  \else
+    \g@addto@macro\AuthorListTypeset{\ProjectMetaSep}%
+    \g@addto@macro\AuthorListPlain{\ProjectMetaSep}%
+    \g@addto@macro\AuthorListPDF{; }%
+    \g@addto@macro\AuthorListBib{\ and }%
+  \fi
+  \g@addto@macro\AuthorListTypeset{\AuthorEntry{#1}{\AffiliationMarks{#3}}}%
+  \g@addto@macro\AuthorListPlain{#1}%
+  \g@addto@macro\AuthorListPDF{#1}%
+  \g@addto@macro\AuthorListBib{#1}%
+  \if\relax\detokenize{#2}\relax\else
+    \ifx\EmailListPlain\@empty\else
+      \g@addto@macro\EmailListTypeset{\ProjectMetaSep}%
+      \g@addto@macro\EmailListPlain{\ProjectMetaSep}%
+      \g@addto@macro\EmailListPDF{; }%
+      \g@addto@macro\AuthorEmailListTypeset{\ProjectMetaSep}%
+      \g@addto@macro\AuthorEmailListPlain{\ProjectMetaSep}%
+      \g@addto@macro\AuthorEmailListPDF{; }%
+    \fi
+    \g@addto@macro\EmailListTypeset{\href{mailto:#2}{\nolinkurl{#2}}}%
+    \g@addto@macro\EmailListPlain{#2}%
+    \g@addto@macro\EmailListPDF{#2}%
+    \g@addto@macro\AuthorEmailListTypeset{#1\enspace\href{mailto:#2}{\texttt{<#2>}}}%
+    \g@addto@macro\AuthorEmailListPlain{#1\enspace<#2>}%
+    \g@addto@macro\AuthorEmailListPDF{#1 <#2>}%
+  \fi
+}
+
+% Optional override: correspondence defaults to the first author, but this
+% declaration lets author order and correspondence remain independent.
+\newcommand{\CorrespondingAuthor}[2]{%
+  \gdef\CorrespondingAuthorName{#1}%
+  \gdef\CorrespondenceEmail{#2}%
+}
+
+% Optional descriptive aliases; normal users can ignore these.
+\let\DeclareAffiliation\Affiliation
+\let\DeclareAuthor\Author
+\makeatother
+
+% ---------------------------------------------------------------------------
+% Derived display macros consumed by all targets.
+% ---------------------------------------------------------------------------
+\newcommand{\ProjectAuthorsDisplay}{\texorpdfstring{\AuthorListTypeset}{\AuthorListPDF}}
+\newcommand{\ProjectAuthorsPlainDisplay}{\AuthorListPlain}
+\newcommand{\ProjectAuthorsPDF}{\AuthorListPDF}
+\newcommand{\ProjectAuthorsBib}{\AuthorListBib}
+\newcommand{\ProjectAffiliationsDisplay}{\texorpdfstring{\AffiliationListTypeset}{\AffiliationListPDF}}
+\newcommand{\ProjectAffiliationsPlainDisplay}{\AffiliationListPlain}
+\newcommand{\ProjectAffiliationsPDF}{\AffiliationListPDF}
+\newcommand{\ProjectEmailsDisplay}{\texorpdfstring{\EmailListTypeset}{\EmailListPDF}}
+\newcommand{\ProjectEmailsPlainDisplay}{\EmailListPlain}
+\newcommand{\ProjectEmailsPDF}{\EmailListPDF}
+\newcommand{\ProjectAuthorEmailsDisplay}{\texorpdfstring{\AuthorEmailListTypeset}{\AuthorEmailListPDF}}
+\newcommand{\ProjectAuthorEmailsPlainDisplay}{\AuthorEmailListPlain}
+\newcommand{\ProjectAuthorEmailsPDF}{\AuthorEmailListPDF}
+\newcommand{\ProjectLeadAuthor}{\LeadAuthor}
+\newcommand{\ProjectLeadAuthorEmail}{\LeadAuthorEmail}
+\newcommand{\ProjectCorrespondingAuthor}{\CorrespondingAuthorName}
+\newcommand{\ProjectCorrespondence}{\CorrespondenceEmail}
+\newcommand{\ProjectContactDisplay}{\ProjectEmailsDisplay}
+
+% ---------------------------------------------------------------------------
+% People declarations. Edit shared/people.tex for authors, emails, affiliations,
+% and (optionally) the corresponding-author override.
+% ---------------------------------------------------------------------------
+\input{../shared/people.tex}
+
+% ---------------------------------------------------------------------------
+% Target metadata appliers. Target files call these; they do not hard-code
+% people metadata.
+% ---------------------------------------------------------------------------
+\newcommand{\DeclareProjectPaperPeople}{%
+  \gdef\authorlist{\ProjectAuthorsDisplay}%
+  \gdef\affiliationlist{\ProjectAffiliationsDisplay}%
+}
+\newcommand{\DeclareProjectPaperAuthors}{\DeclareProjectPaperPeople}
+\newcommand{\DeclareProjectPaperAffiliations}{\DeclareProjectPaperPeople}
+
+\makeatletter
+\newcommand{\ProjectMaybeAddEmailMetadata}{%
+  \ifx\EmailListPlain\@empty\else
+    \metadata[Emails]{\ProjectContactDisplay}%
+  \fi
+}
+\makeatother
+
+\newcommand{\ApplyProjectSlideMetadata}{%
+  \title[\ProjectShortTitle]{\ProjectTitle}%
+  \subtitle{\ProjectSubtitle}%
+  \author{\ProjectAuthorsDisplay}%
+  \institute{\ProjectAffiliationsDisplay}%
+  \date{\ProjectDate}%
+}
+
+\newcommand{\ApplyProjectGalleryMetadata}{%
+  \title[\ProjectShortTitle]{SAIM Unified Component Gallery}%
+  \subtitle{A visual reference for the paper, presentation, and technical-book system}%
+  \author{\ProjectAuthorsDisplay}%
+  \institute{\ProjectAffiliationsDisplay}%
+  \date{\ProjectDate}%
+}
+
+\newcommand{\ProjectDescription}{%
+A corrected and fully specified block sparse-spectral framework with exact primal reductions, finite support identification, local convergence analysis, and theorem-facing modern-AI validation.}

@@ -1,0 +1,29 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=4mm and 7mm, every node/.style={font=\small}]
+\node[primarybox, text width=0.17\linewidth] (s0) {\textbf{Current iterate} $X_k$};
+\node[primarybox, text width=0.17\linewidth, right=of s0] (s1) {\textbf{Gradient}\\[-0.5mm]{\scriptsize $g_k=\nabla F(X_k)$}};
+\node[primarybox, text width=0.17\linewidth, right=of s1] (s2) {\textbf{Project to tangent}\\[-0.5mm]{\scriptsize $\eta_k=\mathrm{Proj}_{T_{X_k}\!\mathcal{M}}(g_k)$}};
+\node[primarybox, text width=0.17\linewidth, right=of s2] (s3) {\textbf{Retract}\\[-0.5mm]{\scriptsize $X'=\mathrm{Retr}_{X_k}(t\,\eta_k)$}};
+
+\draw[arrPrimary] (s0)--(s1);
+\draw[arrPrimary] (s1)--(s2);
+\draw[arrPrimary] (s2)--(s3);
+
+\node[secondarybox, text width=0.42\linewidth, below=11mm of s2] (s4) {\textbf{Armijo check}\\[-0.5mm]{\scriptsize $F(X')\ge F(X_k)+\sigma t\norm{\eta_k}_F^2$?}};
+\draw[arrPrimary] (s3) |- (s4);
+
+\node[successbox, text width=0.19\linewidth, below=of s4, xshift=-0.26\linewidth] (s5) {\textbf{Accept}\\[-0.5mm]{\scriptsize $X_{k+1}=X'$}};
+\node[neutralbox, text width=0.19\linewidth, below=of s4, xshift=0.26\linewidth] (s6) {\textbf{Shrink step}\\[-0.5mm]{\scriptsize $t\gets \rho t$}};
+
+\draw[arrPrimary] (s4.south) -- node[right,font=\scriptsize,yshift=1mm]{yes} ++(-0.26\linewidth,-4mm) -- (s5.north);
+\draw[arrPrimary] (s4.south) -- node[left,font=\scriptsize,yshift=1mm]{no}  ++( 0.26\linewidth,-4mm) -- (s6.north);
+\draw[arrPrimary] (s6.east) -- ++(5mm,0) -- ++(0,22mm) -| (s3.south);
+
+\node[successbox, text width=0.95\linewidth, below=14mm of s5, xshift=0.26\linewidth] (s7) {\textbf{Stopping test} (all required): tangent residual $\norm{\eta_k}_F$ small \ $\land$\  step norm $\norm{X_{k+1}-X_k}_F$ small \ $\land$\  support stable across the probe window};
+\draw[arrPrimary] (s5) -- (s7);
+
+\end{tikzpicture}
+\caption{Safeguarded Riemannian ascent, the analyzed algorithm. Gradient $\to$ tangent projection $\to$ retraction $\to$ Armijo-safeguarded acceptance with geometric step shrinkage. The stopping rule combines a tangent-residual criterion with both step-norm and support-stability tests; objective change alone is insufficient. Historical full-polar iteration omits the Armijo loop and carries no last-iterate claim.}
+\label{fig:a-safeguarded-flow}
+\end{figure}

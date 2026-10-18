@@ -1,0 +1,19 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=7mm and 9mm]
+\node[primarybox,text width=2.7cm] (id) {Exact model identities};
+\node[primarybox,text width=2.7cm,right=of id] (alg) {Specified algorithms};
+\node[secondarybox,text width=2.7cm,right=of alg] (progress) {Ascent + residual};
+\node[secondarybox,text width=2.7cm,below=of progress] (kl) {Sufficient ascent + relative error + KŁ};
+\node[secondarybox,text width=2.7cm,left=of kl] (identify) {Strict margin + convergence};
+\node[successbox,text width=2.7cm,left=of identify] (local) {Fixed-support local map};
+\draw[arrPrimary] (id)--(alg);
+\draw[arrPrimary] (alg)--(progress);
+\draw[arrPrimary] (progress)--(kl);
+\draw[arrPrimary] (kl)--(identify);
+\draw[arrPrimary] (identify)--(local);
+\draw[arr] (progress) to[bend left=20] (identify);
+\end{tikzpicture}
+\caption{The theorem dependency graph. Identification and local rates are not available before the model, algorithm, and convergence object are fixed.}
+\label{fig:a-proofgraph}
+\end{figure}

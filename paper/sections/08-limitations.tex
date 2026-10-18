@@ -1,0 +1,5 @@
+\section{Limitations}
+\label{sec:limitations}
+The exact identities do not provide global optimality. Whole-sequence convergence is attached to the safeguarded method, not automatically to every full-polar implementation. Finite identification requires convergence and a strict margin; ties can produce indefinite switching. Local linear rates require an isolated fixed point and either an active eigengap or a contractive tangent Jacobian. Safe screening is only as reliable as its radius certificate. Score orthogonality is a geometric constraint, not a guarantee of semantic or causal nonredundancy. Transformer observations are dependent, and document-level sampling does not eliminate all distribution shift. Finally, sparse-autoencoder and native-neuron baselines optimize different representation classes, so comparisons must be matched by support, reconstruction, and causal criteria rather than summarized by one score.
+
+\input{../shared/tables/a-failure-cases.tex}

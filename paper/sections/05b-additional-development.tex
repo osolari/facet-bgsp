@@ -1,0 +1,40 @@
+\section{Algorithmic Variants and Proof-Complete Special Cases}
+\label{sec:a-complete-special-cases}
+
+\subsection{A-SUM alternating method}
+The exact normalized-loading model is best handled in its primal variables rather than by pretending it is smooth at an inactive component. Given $X_t$, update every loading column by Theorem~\ref{thm:a-loading-elimination}; given $Z_{t+1}$, update $X$ by a polar factor of $AZ_{t+1}N$. If a loading column is zero, its corresponding score column is not identified by the trace term. The implementation either removes the inactive column from the block or completes the active score frame by a deterministic orthogonal-completion rule. This choice is part of the estimator and is logged.
+
+\begin{algorithm}[t]
+\caption{A-SUM alternating support-and-score update}
+\label{alg:a-sum-alternating}
+\begin{algorithmic}[1]
+\Require Data operator $A$, thresholds $\gamma_j$, weights $\mu_j$, initial $X_0\in\St(p,m)$
+\For{$t=0,1,\ldots$}
+  \For{$j=1,\ldots,m$}
+    \State $s_{j,t}\gets S_{\gamma_j}(\mu_jA^\top x_{j,t})$
+    \State $z_{j,t+1}\gets s_{j,t}/\norm{s_{j,t}}_2$ if $s_{j,t}\neq0$, otherwise $0$
+  \EndFor
+  \State $G_{t+1}\gets AZ_{t+1}N$
+  \State $X_{t+1}\gets$ declared active-column polar update plus deterministic completion
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+Each loading update exactly maximizes its conditional objective. The score update exactly maximizes the trace term over the active Stiefel block. Therefore the primal objective is nondecreasing. Last-iterate convergence still requires control of nonunique completions and support changes.
+
+\subsection{A complete rank-one convergence theorem}
+For rank one and a fixed hard support, the method is ordinary power iteration. This special case supplies a proof-complete baseline against which the broader block results (the whole-sequence KŁ theorem of \Cref{sec:extended-theory} and the component-specific-support local map of \Cref{sec:theory}) are measured.
+
+\begin{theorem}[Rank-one convergence on an identified support]
+\label{thm:a-rankone-complete}
+Let $C_S=A_SA_S^\top$ have a simple largest eigenvalue $\lambda_1>\lambda_2$. If support $S$ is selected from some iteration onward and the first such iterate is not orthogonal to the leading eigenvector, then the iterates converge to that eigenvector up to sign, with the tangent-angle rate in Proposition~\ref{prop:rankone-rate}. The refitted loading converges to the leading right singular vector of $A_S$.
+\end{theorem}
+\begin{proof}
+The score iteration is the normalized power method, so the eigenbasis argument gives convergence and rate. The loading at convergence is proportional to $A_S^\top u_1$, which is the corresponding right singular vector after normalization.
+\end{proof}
+
+\subsection{Fixed-support second-order classification}
+For $f(x)=x^\top C_Sx$ on the unit sphere, the Riemannian Hessian at eigenvector $u_i$ acts on tangent eigenvector $u_j$ as $2(\lambda_j-\lambda_i)u_j$. Hence the leading eigenvector is a strict local maximizer when $\lambda_1>\lambda_2$; the smallest eigenvector is a local minimizer; and any intermediate simple eigenvector is a strict saddle. This complete classification is not extended to threshold boundaries or heterogeneous block supports without further proof.
+
+\subsection{Complexity accounting}
+One full response evaluation costs one $A^\top X$ and one $AZ$ product, $O(npm)$ for dense $A$. After permanent screening to $s$ active or near-active coordinates, the corresponding cost is $O(spm)$ plus the cost of maintaining safe bounds. Polar orthogonalization costs $O(pm^2+m^3)$ and is lower order only when $n$ is sufficiently larger than $m$.

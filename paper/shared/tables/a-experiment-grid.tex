@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Pre-specified validation grid.}
+\label{tab:a-experiments}
+\small
+\begin{tabular}{p{0.16\linewidth}p{0.25\linewidth}p{0.23\linewidth}p{0.15\linewidth}}
+\toprule
+Tier & Manipulated factors & Primary metric & Falsifier \\
+\midrule
+Synthetic & Margin, gap, overlap, ties, initialization & Identification time and local slope & No relation to assumption diagnostics \\
+Neural bridge & Known concepts, superposition, noise & Support/causal recovery & No improvement over matched neurons \\
+Foundation model & Layer, domain, model family, support budget & Stability, causal effect, screening cost & Unstable supports or no causal value \\
+\bottomrule
+\end{tabular}
+\end{table}

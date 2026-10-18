@@ -1,0 +1,42 @@
+# M9-Zheng-68k: sparse gene programs on 68k PBMC with paper-published
+# FACS-correlated cell-type labels. 10x fresh donor-A matrix paired with
+# the per-barcode annotations from
+# 10XGenomics/single-cell-3prime-paper/pbmc68k_analysis.
+# Same sweep + figures as m9_scrna.yaml / m9_zheng_facs.yaml.
+# SparsePCA alpha list is trimmed to 4 values to keep single-run compute
+# within ~1-2h on 68k cells.
+
+name: m9_zheng68k
+seed: 2047
+
+data:
+  data_root: "papers/a/runs/m9_zheng68k/raw"
+  labels_path: "papers/a/runs/m9_zheng68k/68k_pbmc_barcodes_annotation.tsv"
+  cache_path: "papers/a/runs/m9_zheng68k/_cache_zheng68k_preprocessed.npz"
+  n_hvg: 2000
+
+decomposition:
+  m: 10
+
+facet:
+  gamma_candidates: [0.03, 0.05, 0.08, 0.12, 0.15, 0.20, 0.30, 0.50, 0.80, 1.20]
+
+truncated_pca:
+  top_k_per_component: [5, 10, 20, 40, 80, 160, 320, 640, 1200, 2000]
+
+sparse_pca:
+  alphas: [0.1, 0.5, 2.0, 4.0]
+
+figure:
+  hero_top_k_components: 4
+  hero_top_k_genes: 15
+  interpretability_top_k_genes: 15
+
+interpretability:
+  reference: best_facet
+  ami_tolerance: 0.025
+
+output:
+  csv: m9_zheng68k.csv
+  figure: m9_zheng68k.png
+  interpretability_figure: m9_zheng68k_interpretability_hero.png

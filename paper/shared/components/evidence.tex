@@ -1,0 +1,15 @@
+% Compact evidence-status labels usable in paper, slides, and book.
+% Requires xcolor; no other package dependency.
+\newcommand{\SAIMEvidenceTag}[3]{%
+  \begingroup
+  \setlength{\fboxsep}{2.6pt}%
+  \setlength{\fboxrule}{0.45pt}%
+  \raisebox{0.2ex}{\fcolorbox{#1}{#2}{%
+    \textcolor{#1}{\sffamily\bfseries\fontsize{6.8}{8}\selectfont\textls[65]{\strut\MakeUppercase{#3}}}}}%
+  \endgroup}
+\newcommand{\MeasuredTag}{\SAIMEvidenceTag{Positive}{PositivePale}{Measured}}
+\newcommand{\ReproducedTag}{\SAIMEvidenceTag{Secondary}{SecondaryPale}{Reproduced}}
+\newcommand{\SyntheticTag}{\SAIMEvidenceTag{Warning}{WarningPale}{Synthetic}}
+\newcommand{\PlannedTag}{\SAIMEvidenceTag{RuleDark}{LightPanel}{Planned}}
+\newcommand{\IllustrativeTag}{\SAIMEvidenceTag{PrimaryDark}{PrimaryWash}{Illustrative}}
+\newcommand{\ExternalTag}{\SAIMEvidenceTag{Secondary}{SecondaryPale}{External}}

@@ -1,0 +1,72 @@
+\section{Corrected Problem Formulation}
+\label{sec:setup}
+Let \(A=[a_1,\ldots,a_n]\in\R^{p\times n}\), let \(X=[x_1,\ldots,x_m]\in\St(p,m)\), and let \(\mu_j>0\). For a vector \(c\), define soft thresholding by
+\[
+\Soft_\gamma(c)_i=\operatorname{sign}(c_i)(|c_i|-\gamma)_+.
+\]
+The component response is \(c_j(X)=\mu_jA^\top x_j\).
+
+\subsection{A-SUM: normalized loading-ball model}
+The corrected primal is
+\begin{equation}
+\max_{X\in\St(p,m)}\sum_{j=1}^m
+\max_{\norm{z_j}_2\le 1}
+\bigl\{c_j(X)^\top z_j-\gamma_j\norm{z_j}_1\bigr\}.
+\label{eq:asum-primal}
+\end{equation}
+Loading balls allow an inactive column. The reduced objective is
+\begin{equation}
+F_{\mathrm{sum}}(X)=\sum_{j=1}^m\norm{\Soft_{\gamma_j}(c_j(X))}_2.
+\label{eq:asum}
+\end{equation}
+When the thresholded response is nonzero, the recovered loading is its normalized version; otherwise \(z_j=0\) is valid.
+
+\begin{proposition}[Exact loading-ball elimination]
+\label{prop:sum-elimination}
+For any \(c\in\R^n\) and \(\gamma\ge0\),
+\[
+\max_{\norm z_2\le1}\{c^\top z-\gamma\norm z_1\}
+=\norm{\Soft_\gamma(c)}_2.
+\]
+If \(\Soft_\gamma(c)\neq0\), the unique maximizer is \(z^\star=\Soft_\gamma(c)/\norm{\Soft_\gamma(c)}_2\); if it is zero, every maximizer includes \(z=0\), and zero is selected by convention.
+\end{proposition}
+\begin{proof}
+For each coordinate, \(c_i z_i-\gamma|z_i|\le (|c_i|-\gamma)_+|z_i|\), with equality when the sign of \(z_i\) agrees with \(c_i\) on the active set and \(z_i=0\) elsewhere. Hence the inner problem reduces to maximizing \(\Soft_\gamma(c)^\top u\) over \(\norm u_2\le1\). Cauchy--Schwarz yields the value and optimizer. If the thresholded vector is zero, the objective is nonpositive and zero attains zero.
+\end{proof}
+
+\subsection{A-SQ: squared-threshold model}
+The historical reduced objective is instead
+\begin{equation}
+F_{\mathrm{sq}}(X)=\sum_{j=1}^m\norm{\Soft_{\gamma_j}(c_j(X))}_2^2.
+\label{eq:asq}
+\end{equation}
+It has a different primal interpretation.
+\begin{proposition}[Quadratic-lift identity]
+\label{prop:quadratic-lift}
+For any \(c\in\R^n\),
+\[
+\norm{\Soft_\gamma(c)}_2^2
+=\max_{z\in\R^n}\{2c^\top z-\norm z_2^2-2\gamma\norm z_1\},
+\]
+and the unique maximizer is \(z^\star=\Soft_\gamma(c)\).
+\end{proposition}
+\begin{proof}
+The objective separates over coordinates. For one coordinate, completing the square on each sign half-line gives the maximizer \(\operatorname{sign}(c_i)(|c_i|-\gamma)_+\) and optimal value \((|c_i|-\gamma)_+^2\). Summing proves the claim.
+\end{proof}
+
+\subsection{The objectives are not equivalent}
+\begin{proposition}[Two-component counterexample]
+\label{prop:counterexample}
+There exist a compact feasible set and two nonnegative component responses \(r_1(X),r_2(X)\) for which \(\arg\max_X r_1+r_2\) and \(\arg\max_X r_1^2+r_2^2\) are disjoint.
+\end{proposition}
+\begin{proof}
+Consider two feasible points \(X_a,X_b\) with responses \((r_1,r_2)(X_a)=(2,2)\) and \((r_1,r_2)(X_b)=(3.2,0.5)\). The sums are \(4\) and \(3.7\), so the sum objective selects \(X_a\). The squared sums are \(8\) and \(10.49\), so the squared objective selects \(X_b\). Such response pairs can be realized by a finite feasible subset or approximated arbitrarily closely by thresholded linear responses. Therefore no monotone scalar transformation relates the block objectives in general.
+\end{proof}
+
+\input{../shared/tables/a-models-and-loadings.tex}
+
+\subsection{Numerical conventions}
+The algorithmic object is incomplete without deterministic edge-case policies. We use: (i) inactive response columns remain zero and are excluded from the active polar block; (ii) threshold equality is inactive unless an experiment explicitly studies set-valued ties; (iii) rank-deficient polar factors are chosen by a deterministic thin-SVD completion; (iv) component permutations are aligned by maximum absolute score correlation for diagnostics; and (v) refitting applies the support mask before normalization or solves the exact restricted problem.
+
+\input{../shared/tables/a-edge-case-policies.tex}
+\input{../shared/tables/a-assumptions.tex}

@@ -1,0 +1,27 @@
+% §14 required table #1, models and loading semantics.
+\begin{table}[t]
+\centering
+\caption{Corrected block estimator family and loading recovery. The three columns define \emph{distinct} estimators; §3 proves A-SUM $\neq$ A-SQ at $m\!\ge\!2$ and A-HT is a third exact-cardinality variant. Loading recovery is the loading-column argmax at a fixed score and defines the \emph{raw} estimand that the restricted refit stage then post-processes.}
+\label{tab:a-models-and-loadings}
+\small
+\begin{tabular}{p{0.17\linewidth}p{0.26\linewidth}p{0.23\linewidth}p{0.24\linewidth}}
+\toprule
+Estimator & Primal (per column $j$) & Reduced objective & Loading recovery / inactive policy \\
+\midrule
+A-SUM &
+$\displaystyle \max_{\norm{z_j}_2\le 1}\!\!\bigl\{c_j^{\!\top}z_j-\gamma_j\norm{z_j}_1\bigr\}$ &
+$F_{\mathrm{sum}}(X)=\sum_j\norm{\Soft_{\gamma_j}(c_j)}_2$ &
+$z_j^\star = \Soft_{\gamma_j}(c_j)/\norm{\Soft_{\gamma_j}(c_j)}_2$ when nonzero; otherwise $z_j=0$ is the chosen inactive branch (loading-ball slack) \\
+\addlinespace
+A-SQ &
+$\displaystyle \max_{z_j}\!\!\bigl\{2c_j^{\!\top}z_j-\norm{z_j}_2^2-2\gamma_j\norm{z_j}_1\bigr\}$ &
+$F_{\mathrm{sq}}(X)=\sum_j\norm{\Soft_{\gamma_j}(c_j)}_2^2$ &
+$z_j^\star = \Soft_{\gamma_j}(c_j)$ (unconstrained quadratic lift; the vector itself is the loading, no renormalization) \\
+\addlinespace
+A-HT (hard-threshold, exact cardinality~$k$) &
+$\displaystyle \max_{\norm{z_j}_2\le1,\,\norm{z_j}_0\le k}\!\!c_j^{\!\top}z_j$ &
+$F_k(X)=\sum_j\sum_{i\in T_k(c_j)}c_{j,i}^2$ &
+$z_j^\star$ supported on the top-$k$ coordinates of $c_j$ (deterministic tie policy); refit on the chosen support \\
+\bottomrule
+\end{tabular}
+\end{table}

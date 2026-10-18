@@ -1,0 +1,60 @@
+# Tier-3, GPT-2 small residual-stream activations.
+# Loads gpt2 (124M params, d=768, 12 layers) from Hugging Face, extracts
+# post-block-6 residual activations over a longer public-domain corpus, and
+# fits m=32 components with FACET A-SQ (safeguarded), PCA (top-m), and a
+# random orthogonal baseline. Metrics (plan-2026-10-13T1908Z §T3):
+#   - reconstruction R² (strict projection onto component subspace)
+#   - Hoyer sparsity per component (score concentration)
+#   - mean |kurtosis| per component (heavy-tail measure)
+#   - multi-probe causal-ablation KL: ablate top-k components across many
+#     probe sentences, report distribution with matched-norm random-direction
+#     null.
+
+name: t3_llm_activations
+seed: 2026
+
+model:
+  name: gpt2
+  layer: 6
+  max_tokens_per_text: 220
+
+# Longer public-domain / neutral English texts covering science, geography,
+# history, and mathematics. ~2000 tokens total.
+texts:
+  - "Albert Einstein developed the theory of general relativity in 1915, replacing Newton's law of universal gravitation with a geometric theory of gravity. The equations describe how matter curves spacetime and how curved spacetime in turn directs the motion of matter. The theory predicted the bending of starlight by the sun, the precession of Mercury's orbit, and the existence of gravitational waves, which were directly detected a century later. These successes established the theory as the modern description of gravity at macroscopic scales."
+  - "The chloroplast is an organelle in plant cells where photosynthesis takes place. It contains chlorophyll, the green pigment that captures light energy and converts carbon dioxide and water into glucose, releasing oxygen as a byproduct. Chloroplasts are thought to have evolved from ancient cyanobacteria that were engulfed by early eukaryotic cells, a process known as endosymbiosis. Modern chloroplasts retain their own circular DNA, independent of the cell nucleus."
+  - "The Nile is the longest river in Africa, flowing north from its sources in East Africa to the Mediterranean Sea. Its annual flooding deposited fertile silt along its banks, enabling the agriculture that supported ancient Egyptian civilization. The Nile has two major tributaries: the White Nile, which rises in the Great Lakes region, and the Blue Nile, which originates in the Ethiopian Highlands and contributes the majority of the river's water during the flood season."
+  - "In mathematics, a group is a set equipped with a binary operation that is associative, has an identity element, and in which every element has an inverse. Groups capture the notion of symmetry and arise throughout algebra, geometry, and physics. A Lie group is a group that is also a smooth manifold, so that the group operations are compatible with the manifold structure. The classification of simple Lie groups was a major achievement of twentieth-century mathematics."
+  - "The French Revolution began in 1789 and transformed political life in Europe. It overturned the absolute monarchy, abolished feudal privileges, and declared the universal rights of citizens, inspiring democratic movements across the continent. The revolution passed through several phases, from the moderate constitutional monarchy of 1789 to 1792, through the radical republic and the Reign of Terror, to the Thermidorian Reaction and finally the rise of Napoleon Bonaparte."
+  - "A black hole is a region of spacetime where gravity is so strong that nothing, not even light, can escape. The boundary of this region is called the event horizon, and the physics inside remains an active area of research. Supermassive black holes with masses of millions or billions of solar masses sit at the centers of most galaxies, including our own. The 2019 image of M87's central black hole provided the first direct visual evidence of these objects."
+  - "Deoxyribonucleic acid, or DNA, is a long polymer that encodes the genetic instructions of all living cells. Its double helical structure, discovered in 1953, pairs the bases adenine with thymine and guanine with cytosine. The genetic code is read in triplets called codons, each specifying one of twenty amino acids or a stop signal. The sequencing of the human genome, completed in the early 2000s, launched the era of modern genomics."
+  - "In quantum mechanics, the Heisenberg uncertainty principle states that the position and momentum of a particle cannot both be measured with arbitrary precision. The product of their uncertainties is bounded below by a constant proportional to Planck's constant. The principle is not a statement about measurement imprecision but a fundamental feature of quantum systems, reflecting the wave-like nature of matter and the non-commuting nature of position and momentum operators."
+  - "The Roman Empire reached its greatest territorial extent in the second century, under the emperor Trajan, stretching from Britain in the northwest to Mesopotamia in the east and from the Rhine in the north to the Sahara in the south. Its decline was gradual, driven by internal political instability, economic pressure, and migration of peoples across its northern frontiers. The western half fell in 476, while the eastern Byzantine half persisted until 1453."
+  - "A ribosome is a molecular machine that synthesizes proteins by translating messenger RNA. It consists of two subunits made of ribosomal RNA and dozens of proteins. During translation, transfer RNAs deliver amino acids to the ribosome in the order specified by the mRNA codon sequence, and the ribosome catalyzes the peptide bonds between them. Antibiotics such as tetracycline work by binding to bacterial ribosomes and disrupting this process."
+
+decomposition:
+  m: 32
+
+facet:
+  gamma_candidates: [0.15, 0.25, 0.4, 0.6, 1.0, 2.0]
+
+# Multi-probe causal battery: ablate each of the top-k components per method
+# across every probe sentence and report KL(clean || ablated) at the final
+# token position. Null = matched-norm random direction.
+probe:
+  sentences:
+    - "The capital of France is"
+    - "The chemical symbol for gold is"
+    - "The author of the play Hamlet is"
+    - "The largest planet in the solar system is"
+    - "The speed of light in vacuum is approximately"
+    - "The currency used in Japan is called the"
+    - "The painter of the Mona Lisa was"
+    - "The programming language developed by Guido van Rossum is called"
+    - "The gas humans exhale that plants absorb is"
+    - "The longest river in South America is the"
+  top_k_components: 8
+
+output:
+  csv: t3_llm_activations.csv
+  figure: t3_llm_activations.png
