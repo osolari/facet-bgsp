@@ -35,9 +35,12 @@ preferred-citation:
     - family-names: Solari
       given-names: Omid
   year: 2026
-  url: "https://arxiv.org/abs/XXXX.XXXXX"
+  url: "https://arxiv.org/abs/2610.25721"
+  identifiers:
+    - type: other
+      value: "arXiv:2610.25721"
+      description: arXiv preprint identifier (posted 2026-10-20).
   notes: >
-    arXiv identifier will be filled in once the paper is posted. The
-    paper corresponds to v1.0.0 of this companion repository
-    (doi:10.5281/zenodo.23460512) and v0.1.1 of the facet-core library
-    on PyPI.
+    arXiv:2610.25721. The paper corresponds to v1.0.0 of this companion
+    repository (doi:10.5281/zenodo.23460512) and v0.1.1 of the
+    facet-core library on PyPI.

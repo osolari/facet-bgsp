@@ -1,5 +1,6 @@
 # facet-bgsp
 
+[![arXiv](https://img.shields.io/badge/arXiv-2610.25721-b31b1b.svg)](https://arxiv.org/abs/2610.25721)
 [![DOI](https://zenodo.org/badge/1424882738.svg)](https://doi.org/10.5281/zenodo.23460513)
 
 Reproducibility companion for the paper
@@ -105,7 +106,7 @@ repository's release that matches the arXiv version.
 
 If you use this repository or the library it depends on, please cite:
 
-- The paper (see `CITATION.cff`; arXiv identifier added once posted).
+- The paper: [`arXiv:2610.25721`](https://arxiv.org/abs/2610.25721).
 - The library release `facet-core==0.1.1` on PyPI.
 - The companion repository via its Zenodo DOI
   [`10.5281/zenodo.23460513`](https://doi.org/10.5281/zenodo.23460513)
